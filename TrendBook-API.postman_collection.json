@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "9bcc641c-102a-45dc-b4fb-bd57f626abb5",
-		"name": "week-8",
+		"name": "TrendBook-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -91,7 +91,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"content\": \"132\",\r\n    \"image\": \"https://upload.cc/i1/2022/04/11/Qq25Hw.png\",\r\n    \"comments\": 52\r\n}",
+							"raw": "{\r\n    \"title\": \"title2\",\r\n    \"content\": \"2\",\r\n    \"type\": \"討論2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -204,13 +204,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/posts/629d2cfb502d91edd19a58d3",
+							"raw": "{{url}}/posts/629f0bb2667a287c19db1603",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"posts",
-								"629d2cfb502d91edd19a58d3"
+								"629f0bb2667a287c19db1603"
 							]
 						}
 					},
@@ -392,6 +392,56 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "留言按讚",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/post/62938cb4f9de18648fcb9237/commentLikes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"post",
+								"62938cb4f9de18648fcb9237",
+								"commentLikes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "留言取消讚",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/post/62938cb4f9de18648fcb9237/commentLikes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"post",
+								"62938cb4f9de18648fcb9237",
+								"commentLikes"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -452,7 +502,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"七號\",\r\n    \"email\": \"l407vs09@gmail.com\",\r\n    \"password\": \"testtest2\",\r\n    \"confirmPassword\": \"testtest2\"\r\n}",
+							"raw": "{\r\n    \"name\": \"七號\",\r\n    \"email\": \"a4564sd564a@gmail.com\",\r\n    \"password\": \"testtest2\",\r\n    \"confirmPassword\": \"testtest2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -479,7 +529,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"l407v09@gmail.com\",\r\n    \"password\": \"zxc2963313\"\r\n}",
+							"raw": "{\r\n    \"email\": \"abcd1234@gmail.com\",\r\n    \"password\": \"abcd1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -709,15 +759,20 @@
 								{
 									"key": "",
 									"type": "file",
-									"src": "/D:/Downloads/Telegram Desktop/1-2 (4).jpg"
+									"src": "/C:/Users/xiye/Downloads/istockphoto-1218490893-1024x1024.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{url}}/upload",
+							"raw": "http://127.0.0.1:3006/upload",
+							"protocol": "http",
 							"host": [
-								"{{url}}"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "3006",
 							"path": [
 								"upload"
 							]
