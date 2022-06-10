@@ -37,7 +37,7 @@ const DB = process.env.DATABASE.replace(
 // 連接資料庫
 mongoose.connect(DB)
 	.then(()=>{
-		// console.log('是否開發者模式' ,process.env.NODE_ENV)
+		console.log('是否開發者模式' ,process.env.NODE_ENV)
 	})
 	.catch((error)=>{
 		// console.log(error);

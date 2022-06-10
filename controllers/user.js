@@ -185,15 +185,11 @@ const userController = {
 		sucessHandle(res, null, '您已成功取消追蹤！')
 	}),
 	following: handleErrorAsync(async function(req, res, next) {
-		
-		if (req.params.id === req.user.id) {
-			return next(appError(401,'您無法取消追蹤自己',next))
-		}
 		const newUser =  await User.findById(req.user.id).populate({
 			path: 'following.user',
 			select: 'name image'
 		})
-		sucessHandle(res, newUser.following, '個人資料更改成功')
+		sucessHandle(res, newUser.following, '被追蹤資料取得成功')
 	}),
 }
 

@@ -19,7 +19,14 @@ const commentSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Post',
       require: ['true', 'comment must belong to a post.']
-    }
+    },
+    likes: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+      }
+    ],
+    image: String
   }
 )
 commentSchema.pre(/^find/, function(next) {
@@ -27,7 +34,10 @@ commentSchema.pre(/^find/, function(next) {
     path: 'user',
     select: 'name id createdAt image'
   })
-
+  this.populate({
+    path: 'likes',
+    select: 'name id createdAt image'
+  })
   next()
 })
 const Comment = mongoose.model('Comment', commentSchema)

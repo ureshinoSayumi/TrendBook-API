@@ -16,8 +16,9 @@ const postController = {
 		} else {
 			skip = (page-1) * 10
 		}
-		const q = req.query.q !== undefined ? {"content": new RegExp(req.query.q)} : {}
-		const newPost = await Post.find(q).populate({
+		const q = req.query.q !== undefined ? { "content": new RegExp(req.query.q) } : {}
+		const q2 = req.query.q !== undefined ? { "title": new RegExp(req.query.q) } : {}
+		const newPost = await Post.find({$or:[q, q2]}).populate({
 			path: 'user',
 			select: 'name photo sex image'
 		}).populate({
@@ -25,7 +26,7 @@ const postController = {
 			select: 'name photo sex image'
 		}).populate({
 			path: 'comments',
-			select: 'comment user createdAt'
+			select: 'comment user image createdAt'
 		}).sort(timeSort).limit(rows).skip(skip)
 		const a = await Comment.find({})
 		sucessHandle(res, newPost, '取得成功')
@@ -40,7 +41,7 @@ const postController = {
 			select: 'name photo sex image'
 		}).populate({
 			path: 'comments',
-			select: 'comment user createdAt'
+			select: 'comment user image createdAt'
 		})
 		sucessHandle(res, [newPost], '取得成功')
   }),
@@ -73,12 +74,16 @@ const postController = {
 			select: 'name photo sex image'
 		}).populate({
 			path: 'comments',
-			select: 'comment user createdAt'
+			select: 'comment user image createdAt'
 		}).sort(timeSort).limit(rows).skip(skip)
 		sucessHandle(res, newPost, '取得成功') 
   	}),
 	createPost: handleErrorAsync(async function(req, res, next) {
 		const createData = req.body
+		console.log(createData, 'checkUser')
+		if (!createData.title) {
+			return appError(400, '單筆建立失敗，標題必填', next)
+		}
 		if (!createData.content) {
 			return appError(400, '單筆建立失敗，貼文內容必填', next)
 		}
@@ -144,14 +149,40 @@ const postController = {
 		)
 		sucessHandle(res, newPost, '刪除成功')
 	}),
+	likes: handleErrorAsync(async (req, res, next) => {
+		const _id = req.params.id
+    let newPost = await Post.findOneAndUpdate(
+			{ _id},
+			{ $addToSet: { likes: req.user.id } }
+			// addToSet 跟 push 差別
+			// push 如果裡面已經有重覆的，一樣會push，addToSet 不會
+		)
+		sucessHandle(res, newPost, '成功按讚', 201)
+  }),
+	deleteLikes: handleErrorAsync(async (req, res, next) => {
+		const _id = req.params.id
+		const newPost = await Post.findOneAndUpdate(
+			{ _id},
+			{ $pull: { likes: req.user.id } }
+			// pull 如果有就移除，沒有就不做任何動作
+    )
+		sucessHandle(res, newPost, '成功收回讚', 201)
+  }),
+	deleteAllPost: handleErrorAsync(async (req, res, next) => {
+		const newPost  = await Post.deleteMany({})
+		sucessHandle(res, newPost, '成功刪除全部貼文')
+  }),
 	comment: handleErrorAsync(async (req, res, next) => {
 		const user = req.user.id
 		const post = req.params.id
-		const {comment} = req.body
+		const { comment } = req.body
+		const { image } = req.body
+		console.log(comment, 'comment')
 		const newComment = await Comment.create({
 			post,
 			user,
-			comment
+			comment,
+			image
 		})
 		res.status(201).json({
 			status: 'success',
@@ -210,28 +241,27 @@ const postController = {
 		)
 		sucessHandle(res, newComment, '刪除成功')
 	}),
-	likes: handleErrorAsync(async (req, res, next) => {
+	commentLikes: handleErrorAsync(async (req, res, next) => {
+		console.log(req.params.id, 'req.params.id')
 		const _id = req.params.id
-    let newPost = await Post.findOneAndUpdate(
+    let newComment = await Comment.findOneAndUpdate(
 			{ _id},
-			{ $addToSet: { likes: req.user.id } }
+			{ $addToSet: { likes: req.user.id } },
 			// addToSet 跟 push 差別
 			// push 如果裡面已經有重覆的，一樣會push，addToSet 不會
+			{ returnDocument: 'after' }
 		)
-		sucessHandle(res, newPost, '成功按讚', 201)
+		sucessHandle(res, newComment, '成功按讚', 201)
   }),
-	deleteLikes: handleErrorAsync(async (req, res, next) => {
+	commentDeleteLikes: handleErrorAsync(async (req, res, next) => {
 		const _id = req.params.id
-		const newPost = await Post.findOneAndUpdate(
+		const newComment = await Comment.findOneAndUpdate(
 			{ _id},
-			{ $pull: { likes: req.user.id } }
+			{ $pull: { likes: req.user.id } },
 			// pull 如果有就移除，沒有就不做任何動作
-    )
-		sucessHandle(res, newPost, '成功收回讚', 201)
-  }),
-	deleteAllPost: handleErrorAsync(async (req, res, next) => {
-		const newPost  = await Post.deleteMany({})
-		sucessHandle(res, newPost, '成功刪除全部貼文')
+			{ returnDocument: 'after' }
+		)
+		sucessHandle(res, newComment, '成功收回讚', 201)
   }),
 }
 

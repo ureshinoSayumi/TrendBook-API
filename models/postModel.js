@@ -6,6 +6,9 @@ const postSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, '名稱必填'],
     },
+    title: {
+      type: String,
+    },
     tags: {
       type: ['String'],
     },

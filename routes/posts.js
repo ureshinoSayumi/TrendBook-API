@@ -19,5 +19,7 @@ router.delete('/posts', isAuth, postController.deleteAllPost);
 router.post('/posts/:id/comment', isAuth, postController.comment);
 router.delete('/posts/:id/comment', isAuth, postController.deleteComment);
 router.patch('/posts/:id/comment', isAuth, postController.updateComment);
+router.post('/post/:id/commentLikes', isAuth, postController.commentLikes);
+router.delete('/post/:id/commentUnlike', isAuth, postController.commentDeleteLikes);
 
 module.exports = router;
